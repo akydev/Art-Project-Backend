@@ -1,0 +1,11 @@
+const fs = require("fs");
+const test = "Welcome to the art project";
+console.log(test);
+
+fs.readFile("test.txt", "utf8", (err, data) => {
+  if (err) {
+    console.log("Something went wrong!", err);
+    return;
+  }
+  console.log(data);
+});
