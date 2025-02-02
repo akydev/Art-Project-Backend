@@ -15,7 +15,7 @@ app.use("api/user", userRoutes);
 
 const startConnection = async () => {
   try {
-    await dbConnection("mongodb://localhost:27017/nodejstest");
+    await dbConnection("mongodb://localhost:27017/artproject");
     await app.listen(port, () => {
       console.log(`Server is running on port ${port}`);
     });
