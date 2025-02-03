@@ -8,6 +8,8 @@ const {
   updateUser, // Function to handle updating a user
   deleteUser, // Function to handle deleting a user
 } = require("../controllers/user");
+const authMiddleware = require("../middleware/auth");
+const { loginUser } = require("../controllers/authController");
 
 // Create a new Express router instance to define user-related routes
 const router = express.Router();
@@ -15,7 +17,9 @@ const router = express.Router();
 // Define the POST and GET routes for the root of '/api/user' endpoint
 // POST - Calls the 'create' function to add a new user
 // GET - Calls the 'lists' function to retrieve a list of users
-router.route("/").post(create).get(lists);
+router.route("/").post(create).get(authMiddleware, lists);
+
+router.route("/login").post(loginUser);
 
 // Define the PUT and DELETE routes for the '/api/user/:id' endpoint
 // PUT - Calls the 'updateUser' function to update a specific user by ID

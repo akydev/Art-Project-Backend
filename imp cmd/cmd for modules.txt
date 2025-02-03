@@ -2,3 +2,5 @@ npm init // initialize the project
 npm i nodemon // keep the server on
 npm i express // middleware between client and server
 npm i mongoose // database ODM
+npm i jsonwebtoken // for authentication module
+npm i bcryptjs // hash and verify passwords

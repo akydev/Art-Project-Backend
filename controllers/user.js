@@ -1,5 +1,6 @@
 // Import the User model to interact with the 'users' collection in MongoDB
 const User = require("../models/user");
+const bcrypt = require("bcryptjs");
 
 // Function to create a new user
 const create = async (req, res) => {
@@ -18,13 +19,16 @@ const create = async (req, res) => {
       return res.status(400).json({ message: "Email already exists" });
     }
 
+    const genSalt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(password, genSalt);
+
     // Create a new user document in the database
     const user = await User.create({
       firstName,
       lastName,
       age,
       email,
-      password,
+      password: hashPassword,
     });
 
     // Respond with the newly created user and a status of 201 (created)
@@ -55,11 +59,18 @@ const updateUser = async (req, res) => {
     // Extract the user ID from the route parameters
     const { id } = req.params;
 
+    const genSalt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(req.body.password, genSalt);
+
     // Find the user by ID and update their data, return the updated user document
-    const user = await User.findByIdAndUpdate(id, req.body, {
-      new: true, // Return the updated user document
-      runValidators: true, // Ensure that validation rules are applied during the update
-    });
+    const user = await User.findByIdAndUpdate(
+      id,
+      { ...req.body, password: hashPassword },
+      {
+        new: true, // Return the updated user document
+        runValidators: true, // Ensure that validation rules are applied during the update
+      }
+    );
 
     // If the user wasn't found, send a 404 not found response
     if (!user) {
